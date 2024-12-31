@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/addTransaction">
+
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.financemanager.LoginAndSignUp.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.financemanager.LoginAndSignUp.LoginFragment"
+        android:label="LoginFragment">
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@+id/signUpFragment"
+            />
+        <action
+            android:id="@+id/action_loginFragment_to_dashBoard"
+            app:destination="@id/dashBoard" />
+    </fragment>
+    <fragment
+        android:id="@+id/dashBoard"
+        android:name="com.example.financemanager.DashBoard"
+        android:label="fragment_dash_board"
+        tools:layout="@layout/fragment_dash_board" >
+        <action
+            android:id="@+id/action_dashBoard_to_addTransaction"
+            app:destination="@id/addTransaction" />
+    </fragment>
+    <fragment
+        android:id="@+id/addTransaction"
+        android:name="com.example.financemanager.AddTransaction"
+        android:label="AddTransaction" />
+
+</navigation>
