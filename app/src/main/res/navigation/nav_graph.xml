@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/addTransaction">
+    app:startDestination="@id/dashBoard">
 
     <fragment
         android:id="@+id/signUpFragment"
@@ -37,6 +37,10 @@
     <fragment
         android:id="@+id/addTransaction"
         android:name="com.example.financemanager.AddTransaction"
-        android:label="AddTransaction" />
+        android:label="AddTransaction" >
+        <action
+            android:id="@+id/action_addTransaction_to_dashBoard"
+            app:destination="@id/dashBoard" />
+    </fragment>
 
 </navigation>

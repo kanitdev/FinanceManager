@@ -5,17 +5,26 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.example.financemanager.recycler.Adapter
-import com.example.financemanager.recycler.Expense
 import com.example.financemanager.databinding.FragmentDashBoardBinding
+import com.example.financemanager.room.AppDatabase
+import com.example.financemanager.room.Expense
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class DashBoard : Fragment() {
 
     private var _binding: FragmentDashBoardBinding? = null
     private val binding get() = _binding!!
+    private lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,36 +36,62 @@ class DashBoard : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentDashBoardBinding.inflate(inflater, container, false)
+        val expenseList = null
+        db = AppDatabase.getDatabase(requireContext())
 
-
-        // Create test data
-        val expenseList = arrayListOf(
-            Expense("Salary", 50000.0),
-            Expense("Rent", -15000.0),
-            Expense("Groceries", -2500.0),
-            Expense("Freelance", 10000.0),
-            Expense("Internet Bill", -1499.0),
-            Expense("Investment Returns", 5000.0),
-            Expense("Restaurant", -2000.0),
-            Expense("Mobile Bill", -999.0),
-            Expense("Side Project", 15000.0),
-            Expense("Shopping", -3500.0)
-        )
-
-        updateDashboard(expenseList)
 
         // Set up RecyclerView
-        val adapter = Adapter(expenseList)
+        val adapter = Adapter(emptyList())
         binding.recyclerView.adapter = adapter
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-
         binding.floatingActionButton.setOnClickListener {
             findNavController().navigate(R.id.action_dashBoard_to_addTransaction)
         }
 
+        val itemTouchHelper = object : ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val transactions = (binding.recyclerView.adapter as Adapter).getExpenses()
+                deleteTransaction(transactions[position])
+            }
+
+        }
+        ItemTouchHelper(itemTouchHelper).attachToRecyclerView(binding.recyclerView)
+
+
+
         return binding.root
     }
-    private fun updateDashboard(expenseList:ArrayList<Expense>){
+
+    private fun deleteTransaction(expense: Expense){
+        lifecycleScope.launch(Dispatchers.IO) {
+                db.transactionDao().delete(expense)
+                loadTransactions()
+
+        }
+
+    }
+
+    private fun loadTransactions() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val transactions = db.transactionDao().getAllOrderedByLatest()
+            withContext(Dispatchers.Main) {
+               var adapter = Adapter(transactions)
+                binding.recyclerView.adapter = adapter
+                updateDashboard(transactions)
+            }
+        }
+    }
+
+    private fun updateDashboard(expenseList:List<Expense>){
         var totalAmount = 0.0
         var totalIncome = 0.0
         var totalExpense = 0.0
@@ -79,6 +114,12 @@ class DashBoard : Fragment() {
 
 
     }
+
+    override fun onResume() {
+        super.onResume()
+        loadTransactions()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

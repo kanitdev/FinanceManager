@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
     id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
 
 }
 
@@ -46,6 +47,15 @@ dependencies {
     implementation(libs.androidx.core.splashscreen)
     // Jetpack Compose Navigation
     implementation(libs.androidx.navigation.compose)
+    //room
+    implementation(libs.androidx.room.runtime)
+
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
+    implementation (libs.kotlinx.coroutines.android)
+    implementation (libs.androidx.lifecycle.runtime.ktx)
+
+
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

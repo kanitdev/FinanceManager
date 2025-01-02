@@ -4,10 +4,13 @@ import android.view.LayoutInflater
 import android.graphics.Color
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.financemanager.room.Expense
 import com.example.financemanager.databinding.ExpenseBinding
 
-class Adapter(private val expenses: ArrayList<Expense>) :
+class Adapter(private var expenses: List<Expense>) :
     RecyclerView.Adapter<Adapter.TransactionHolder>() {
+
+    fun getExpenses(): List<Expense> = expenses
 
     class TransactionHolder(private val itemBinding: ExpenseBinding) :
         RecyclerView.ViewHolder(itemBinding.root) {

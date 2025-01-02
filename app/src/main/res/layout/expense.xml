@@ -7,7 +7,7 @@
     <data>
         <variable
             name="list"
-            type="com.example.financemanager.recycler.Expense" />
+            type="com.example.financemanager.room.Expense" />
     </data>
 
     <LinearLayout

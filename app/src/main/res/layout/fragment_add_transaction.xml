@@ -19,6 +19,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <ImageButton
+                android:id="@+id/closeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/close_btn"
+                android:layout_gravity="end"
+                android:background="@drawable/close_bg"
+
+                />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/labelLayout"
                 style="@style/ThemeOverlay.Material3.AutoCompleteTextView.OutlinedBox"
@@ -66,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/currency_selector"
                     android:drawablePadding="12dp"
-                    android:inputType="text"
+                    android:inputType="numberSigned"
                     android:maxLines="1" />
 
 
